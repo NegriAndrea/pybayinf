@@ -39,6 +39,9 @@ parser.add_argument('-l', type=int,
 parser.add_argument('-w', type=int,
         help='number of walkers [%(default)d]', default=30)
 
+parser.add_argument('-o',
+        help='overwrite output', action='store_true')
+
 args = parser.parse_args()
 
 gal = Table.read(args.galaxyFile, format='ascii')
@@ -60,8 +63,12 @@ else:
         print('WARNING: the selected magnitude limit is not consistent with'
                 ' the data')
 
+if args.o:
+    writeMode = 'w'
+else:
+    writeMode = 'w-'
 
-with h5py.File(args.outputFile+'.h5', 'w') as ff:
-    bayesian_fit(data, dataClusterID, cID, V, mag_lim, args.n, args.w, args.l,
-            args.b, ff, groupName='',
+with h5py.File(args.outputFile+'.h5', writeMode) as ff:
+    bayesian_fit(data, dataClusterID, cID, V, mag_lim,
+            args.n, args.w, args.l, args.b, ff,
             Sc2=args.fit_2Sch, Sc1=args.fit_1Sch)

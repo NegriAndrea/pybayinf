@@ -45,7 +45,7 @@ def compute_luminosity_function(data, min_mag = 0.,
 
 
 def bayesian_fit(data, dataClusterIDs,  IDs, V,  mag_min_fit, nThreads,
-        nwalkers, nstepsMCMC, nburninDiscard, chainFile, groupName='mcmc',
+        nwalkers, nstepsMCMC, nburninDiscard, chainFile, groupName='',
         dataUniqueIDs = None, Sc2 = False, Sc1 = False):
     """
     Interface for bayesian fit.
