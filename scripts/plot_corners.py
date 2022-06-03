@@ -13,7 +13,8 @@ import corner
 
 plt.ioff()
 # ================================================================================
-def main(chainFilename, outputPath, suffix='', overwrite = False, bay12 = 1):
+def main(chainFilename, outputPath, suffix='', overwrite = False, bay12 = 1,
+        verbose=False):
 
     img_fmt = '.pdf'
 
@@ -37,7 +38,7 @@ def main(chainFilename, outputPath, suffix='', overwrite = False, bay12 = 1):
     if plotFilename.is_file() and not overwrite:
         raise IOError(str(plotFilename) + ' is already present')
 
-    flat_chain, chain = read_datafile(chainFilename, gr)
+    flat_chain, chain = read_datafile(chainFilename, gr, verbose=verbose)
     fig = corner.corner(flat_chain, labels=labels,
             show_titles=True,
             levels=1.0 - np.exp(-0.5 * np.array([0.5, 1., 2.]) ** 2))
@@ -74,7 +75,7 @@ def main(chainFilename, outputPath, suffix='', overwrite = False, bay12 = 1):
         
 
 
-def read_datafile(fileName, groupname):
+def read_datafile(fileName, groupname, verbose=False):
     """
     Read everything from a well documented file.
 
@@ -130,9 +131,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    verbose = args.verbose
-
     plt.ioff()
 
     main(args.chainFile, args.output_path, overwrite=args.overwrite,
-            bay12 = args.fitType, suffix=args.s)
+            bay12 = args.fitType, suffix=args.s, verbose=args.verbose)
