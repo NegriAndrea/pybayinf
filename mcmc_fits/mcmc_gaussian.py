@@ -5,6 +5,11 @@
 # mpl.use('Agg')
 # mpl.rc('text', usetex=True)
 # mpl.rc('font', family='serif', size=11)
+import sys
+import multiprocessing
+if sys.platform == 'darwin':
+    multiprocessing.set_start_method('fork')
+from multiprocessing import Pool
 import numpy as np
 import matplotlib.pyplot as plt
 import h5py
@@ -136,7 +141,6 @@ nwalkers, ndim = pos.shape
 print(nwalkers, ndim)
 
 import emcee
-from multiprocessing import Pool
 from contextlib import closing
 # with Pool() as pool:
 with closing(Pool(processes=4)) as pool:
