@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 from . import crSharedArr
+Mlim_left = -35.
 
 class NoDataError(Exception):
     pass
@@ -21,7 +22,7 @@ def ln_likelihood_1Sch(theta, Mlim_right):
     alpha, phi, Mo = theta
     n=x.size
 
-    out = (-quad(f_single_schechter, -100., Mlim_right, args=(alpha, phi, Mo))[0]
+    out = (-quad(f_single_schechter, Mlim_left, Mlim_right, args=(alpha, phi, Mo))[0]
             + np.sum(np.log(f_single_schechter(x, alpha=alpha, phi=phi, Mo=Mo))))
 
     return out
@@ -41,7 +42,7 @@ def ln_likelihood_1Sch_densities0(theta, x, xIDs, IDs, V, Mlim_right):
 
     for j, (ID, v) in enumerate(zip(IDs, V)):
         ind = xIDs == ID
-        out += (-quad(f_single_schechter_den, -100., Mlim_right, args=(alpha,
+        out += (-quad(f_single_schechter_den, Mlim_left, Mlim_right, args=(alpha,
             phi, Mo, v))[0] + np.sum(np.log(f_single_schechter_den(x[ind],
                 alpha=alpha, phi=phi, Mo=Mo, V=v))))
 
@@ -62,8 +63,8 @@ def ln_likelihood_2SchfixedMF_densities0(theta, x, xIDs, IDs, V, Mlim_right, Del
 
     for j, (ID, v) in enumerate(zip(IDs, V)):
         ind = xIDs == ID
-        out += ( -quad(f_single_schechter_den, -100., Mlim_right, args=(alpha , phi , Mo,v ))[0]
-                -quad(f_single_schechter_den, -100., Mlim_right, args=(alphaF, phiF,
+        out += ( -quad(f_single_schechter_den, Mlim_left, Mlim_right, args=(alpha , phi , Mo,v ))[0]
+                -quad(f_single_schechter_den, Mlim_left, Mlim_right, args=(alphaF, phiF,
                     Mo+DeltaM, v))[0]
 
                 + np.sum(np.log(f_single_schechter_den(x[ind], alpha=alpha , phi=phi
@@ -90,8 +91,8 @@ def ln_likelihood_2SchfixedMF_densities1(theta, x, xIDs, IDs, V, inds, Mlim_righ
     out = 0.
 
     for ind, v in zip(inds, V):
-        out += ( -quad(f_single_schechter_den, -100., Mlim_right, args=(alpha , phi , Mo,v ))[0]
-                -quad(f_single_schechter_den, -100., Mlim_right, args=(alphaF, phiF,
+        out += ( -quad(f_single_schechter_den, Mlim_left, Mlim_right, args=(alpha , phi , Mo,v ))[0]
+                -quad(f_single_schechter_den, Mlim_left, Mlim_right, args=(alphaF, phiF,
                     Mo+DeltaM, v))[0]
 
                 + np.sum(np.log(f_single_schechter_den(x[ind], alpha=alpha , phi=phi
@@ -114,8 +115,8 @@ def ln_likelihood_2SchfixedMF_densities2(theta, x, xIDs, IDs, V, dims, offsets, 
     n=x.size
     M = IDs.size
 
-    out = [ (-quad(f_single_schechter_den, -100., Mlim_right, args=(alpha , phi , Mo,v ))[0]
-                -quad(f_single_schechter_den, -100., Mlim_right, args=(alphaF, phiF,
+    out = [ (-quad(f_single_schechter_den, Mlim_left, Mlim_right, args=(alpha , phi , Mo,v ))[0]
+                -quad(f_single_schechter_den, Mlim_left, Mlim_right, args=(alphaF, phiF,
                     Mo+DeltaM, v))[0]
 
                 + np.sum(np.log(f_single_schechter_den(x[off:off+dim], alpha=alpha , phi=phi
@@ -146,8 +147,8 @@ def ln_likelihood_2SchfixedMF_densities(theta, Mlim_right, DeltaM):
     n=x.size
     M = IDs.size
 
-    integral = ( -quad(f_single_schechter, -100., Mlim_right, args=(alpha , phi , Mo))[0]
-            -quad(f_single_schechter, -100., Mlim_right, args=(alphaF, phiF,
+    integral = ( -quad(f_single_schechter, Mlim_left, Mlim_right, args=(alpha , phi , Mo))[0]
+            -quad(f_single_schechter, Mlim_left, Mlim_right, args=(alphaF, phiF,
                 Mo+DeltaM))[0])
 
 
@@ -180,7 +181,7 @@ def ln_likelihood_1Sch_densities(theta, Mlim_right):
     M = IDs.size
     out = 0.
 
-    integral = -quad(f_single_schechter, -100., Mlim_right, args=(alpha,
+    integral = -quad(f_single_schechter, Mlim_left, Mlim_right, args=(alpha,
         phi, Mo))[0]
 
 
@@ -247,8 +248,8 @@ def ln_likelihood_2Sch(theta, Mlim_right):
     alpha, phi, Mo, alphaF, phiF, MoF = theta
     n=x.size
 
-    out = ( -quad(f_single_schechter, -100., Mlim_right, args=(alpha , phi , Mo ))[0]
-            -quad(f_single_schechter, -100., Mlim_right, args=(alphaF, phiF, MoF))[0]
+    out = ( -quad(f_single_schechter, Mlim_left, Mlim_right, args=(alpha , phi , Mo ))[0]
+            -quad(f_single_schechter, Mlim_left, Mlim_right, args=(alphaF, phiF, MoF))[0]
 
             + np.sum(np.log(f_single_schechter(x, alpha=alpha , phi=phi , Mo=Mo )
             + f_single_schechter(x, alpha=alphaF, phi=phiF, Mo=MoF)))
@@ -266,8 +267,8 @@ def ln_likelihood_2SchfixedMF(theta, Mlim_right, DeltaM):
     alpha, phi, Mo, alphaF, phiF = theta
     n=x.size
 
-    out = ( -quad(f_single_schechter, -100., Mlim_right, args=(alpha , phi , Mo ))[0]
-            -quad(f_single_schechter, -100., Mlim_right, args=(alphaF, phiF,
+    out = ( -quad(f_single_schechter, Mlim_left, Mlim_right, args=(alpha , phi , Mo ))[0]
+            -quad(f_single_schechter, Mlim_left, Mlim_right, args=(alphaF, phiF,
                 Mo+DeltaM))[0]
 
             + np.sum(np.log(f_single_schechter(x, alpha=alpha , phi=phi , Mo=Mo )
@@ -490,6 +491,8 @@ def mcmc_1Sch_fit_densities(x_in, xIDs_in, IDs_in, V_in, nThreads = 8, alpha = -
             sampler.run_mcmc(pos, nsteps, progress=True)
 
     flat_samples = sampler.get_chain(discard=nburninDiscard, thin=1, flat=True)
+    emcee.autocorr.integrated_time(sampler.get_chain(discard=nburninDiscard),
+            quiet=True)
     # alphamcmc= np.median(flat_samples[:,0])
     # phimcmc= np.median(flat_samples[:,1])
     # Momcmc= np.median(flat_samples[:,2])
@@ -859,6 +862,8 @@ def mcmc_2Sch_fit_fixedMF_densities(x_in,xIDs_in, IDs_in, V_in, nThreads = 8,
             sampler.run_mcmc(pos, nsteps, progress=True)
 
     flat_samples = sampler.get_chain(discard=nburninDiscard, thin=1, flat=True)
+    emcee.autocorr.integrated_time(sampler.get_chain(discard=nburninDiscard),
+            quiet=True)
     # alphamcmc= np.median(flat_samples[:,0])
     # phimcmc= np.median(flat_samples[:,1])
     # Momcmc= np.median(flat_samples[:,2])
