@@ -28,7 +28,7 @@ packages=find_packages(','),
 version='0.1',
 
 # List a license for the project, eg. MIT License
-license='',
+license='MIT License',
 
 # Short description of your library:
 description='Bayesian luminosity function code',
